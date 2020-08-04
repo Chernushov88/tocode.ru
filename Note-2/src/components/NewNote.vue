@@ -4,12 +4,12 @@
         <div class='flex'>
             <div class='block-title'>
                 <label for='input-title'>Title</label>
-                <input type='text' v-model='note.title' id='input-title'>
+                <input type='text' v-model='getNotes.note.title' id='input-title'>
             </div>
             <div class='block-status'>
                 <label>Status</label>
                 <ul>
-                    <li v-for='(item, id) in prioritys' :key='id'>
+                    <li v-for='(item, id) in getNotes.prioritys' :key='id'>
                         <label>
                             <input
                                 type='radio'
@@ -17,8 +17,7 @@
                                 :checked='item.checked'
                                 :id='item.name'
                                 :value='item.name'
-                                v-model='note.priority'
-
+                                v-model='getNotes.note.priority'
                             />
                             {{item.name}}
                         </label>
@@ -27,7 +26,7 @@
             </div>
         </div>
         <label>Descriptiom</label>
-        <div><textarea v-model='note.descr'></textarea></div>
+        <div><textarea v-model='getNotes.note.descr'></textarea></div>
         <button
                 @click='addNote'
                 class='btn btnPrimary'> New Note
@@ -36,23 +35,49 @@
 </template>
 
 <script>
+    import { mapGetters, mapActions } from 'vuex';
 
     export default {
-        props: {
-            note: {
-                type: Object,
-                requeired: true,
-            },
-            prioritys: {
-                type: Array,
-                requeired: true,
-            }
-        },
         methods: {
+            ...mapActions([
+                'removeNoteActions',
+            ]),
             addNote() {
-                console.log(this.note)
-                this.$emit('addNote', this.note)
+                let {title, descr, priority, isEditTitle, isEditBody, filds} = this.getNotes.note
+                if (title === '') {
+                    this.getNotes.message = 'title can`t be blank!'
+                    return false
+                }
+                if (priority === '') {
+                    this.getNotes.message = 'Select the radio button Status'
+                    return false
+                }
+                console.log(priority)
+
+                this.getNotes.notes.push({
+                    title,
+                    descr,
+                    date: new Date(Date.now()).toLocaleString(),
+                    priority,
+                    isEditTitle,
+                    isEditBody,
+                    filds
+                })
+
+                this.getNotes.message = null
+                this.getNotes.note.title = ''
+                this.getNotes.note.descr = ''
+                this.getNotes.note.priority = 'standart'
+                this.getNotes.node.isEditTitle = false
+                this.getNotes.node.isEditBody = false
+                this.getNotes.node.filds = {
+                    titleFild: '',
+                    descrFild: '',
+                }
             },
+        },
+        computed: {
+            ...mapGetters(['getNotes']),
         }
     }
 
