@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal__wrapper" @click="$emit('close')">
+    <div class="modal__wrapper" @mousedown.self="$emit('close')">
       <div class="modal-content" @click.stop="">
 
         <!-- header -->
