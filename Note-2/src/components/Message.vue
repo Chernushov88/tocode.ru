@@ -1,17 +1,17 @@
 <template>
     <div class="message">
-        <h3>Message component - {{ message }}</h3>
+        <h3>Message component - {{ getNotes.message }}</h3>
     </div>
 </template>
 
 <script>
+    import { mapGetters } from "vuex";
+
     export default {
-        props:{
-            message: {
-                type: String,
-                requeired: true,
-                //default: 'default message',
-            }
+        computed: {
+            ...mapGetters([
+                "getNotes"
+            ]),
         }
     }
 </script>

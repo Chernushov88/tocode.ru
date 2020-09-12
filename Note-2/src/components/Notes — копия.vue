@@ -6,10 +6,10 @@
             :class='[{full: !getNotes.grid}, note.priority]'
         >
             <div class='note-header'>
-                <p v-if='!getNotes.notes[id].isEditTitle'  @click='setEditField(id, "title")'>
+                <p v-if='note.isEditTitle === false'  @click='setEditTitle(id)'>
                     {{ note.title }}
                 </p>
-                <div v-if='getNotes.notes[id].isEditTitle' class='inputNoteEditeTitle'>
+                <div v-if='note.isEditTitle === true' class='inputNoteEditeTitle'>
                     <input
                         type='text'
                         v-model='note.filds.titleFild'
@@ -22,8 +22,8 @@
                 <span @click='removeNote(id)' class='close'>X</span>
             </div>
             <div class='note-body'>
-                <p v-if='!note.isEditBody'  @click='setEditField(id, "body")'>{{ note.descr }}</p>
-                <div v-if='note.isEditBody' class='inputNoteEditeBody'>
+                <p v-if='note.isEditBody === false'  @click='setEditBody(id)'>{{ note.descr }}</p>
+                <div v-if='note.isEditBody === true' class='inputNoteEditeBody'>
                     <input
                             type='text'
                             v-model='note.filds.descrFild'
@@ -48,29 +48,32 @@
         methods: {
             ...mapActions([
                 'removeNoteActions',
-                'setEditFieldActions',
-                'resetNoteTitleActions',
-                'saveNoteTitleActions',
-                'saveNoteBodyActions',
-                'resetNoteBodyActions']),
+                'searchActions'
+            ]),
             removeNote(id) {
-                console.log(id)
                 this.removeNoteActions(id)
             },
-            setEditField(id, field) {
-                this.setEditFieldActions([id, field])
+            setEditTitle(id) {
+                this.getNotes.notes[id].isEditTitle = true
             },
             resetNoteTitle(id) {
-                this.resetNoteTitleActions(id)
+                this.getNotes.notes[id].isEditTitle = false
             },
             saveNoteTitle(id) {
-                this.saveNoteTitleActions(id)
+                this.getNotes.notes[id].date = new Date(Date.now()).toLocaleString()
+                this.getNotes.notes[id].title = this.getNotes.notes[id].filds.titleFild
+                this.getNotes.notes[id].isEditTitle = false
+            },
+            setEditBody(id) {
+                this.getNotes.notes[id].isEditBody = true
             },
             resetNoteBody(id) {
-                this.resetNoteBodyActions(id)
+                this.getNotes.notes[id].isEditBody = false
             },
             saveNoteBody(id) {
-                this.saveNoteBodyActions(id)
+                this.getNotes.notes[id].date = new Date(Date.now()).toLocaleString()
+                this.getNotes.notes[id].descr = this.getNotes.notes[id].filds.descrFild
+                this.getNotes.notes[id].isEditBody = false
             },
             mouseOver: function(){
                 event.target.focus()
@@ -90,7 +93,7 @@
                 //Error
                 return array
             },
-        },
+        },        
         computed:{
             ...mapGetters(['getNotes']),
         }
@@ -158,7 +161,6 @@
                 width: auto;
                 border: 0;
                 color: #402caf;
-                background-color: transparent;
             }
         }
 
@@ -209,11 +211,11 @@
                 position: absolute;
                 left: 0;
                 top: 0;
+
                 padding: 0px 0 0 0;
                 width: auto;
                 border: 0;
                 color: #000;
-                background-color: transparent;
             }
         }
         p {
