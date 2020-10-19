@@ -3,14 +3,24 @@
     <section>
       <div class="container">
         <table>
-          <thead>
-          <tr>
-            <th>thumbnail</th>
-            <th @click="sort('email')">Email &#8593;	</th>
-            <th @click="sort('phone')">Phone &#8595;	</th>
-            <th @click="sort('gender')">Gender</th>
-          </tr>
-          </thead>
+            <thead>
+            <tr>
+              <th>thumbnail</th>
+              <th @click="sort('email')"
+                :class="currentUserSort === 'email' ? 'arrow' : ''">
+                <span :class="currentUserSortDir === 'asc' ? 'arrow_down' : 'arrow_up'"></span>
+                Email </th>
+              <th @click="sort('phone')"
+                :class="currentUserSort === 'phone' ? 'arrow' : ''">
+                <span :class="currentUserSortDir === 'asc' ? 'arrow_down' : 'arrow_up'"></span>
+                Phone </th>
+              <th @click="sort('gender')"
+                :class="currentUserSort === 'gender' ? 'arrow' : ''">
+                <span :class="currentUserSortDir === 'asc' ? 'arrow_down' : 'arrow_up'"></span>
+                Gender </th>
+            </tr>
+            </thead>
+
           <tbody>
           <tr v-for="user in usersSort" :key="user.id.value">
             <td><img :src="user.picture.medium" alt=""></td>
@@ -20,17 +30,20 @@
           </tr>
           </tbody>
         </table>
-        <p style="text-align:center;">
-          <span> debug: sort: {{ currentSort }}, dir: {{ currentSortDir }} </span>
-          <span> page: {{ this.page.current }}, length: {{ this.page.length }} </span>
-        </p>
+
+        <div style="text-align:center;">
+          <p><span> debug: sort: <b> {{ currentUserSort }}</b>, dir: <b>{{ currentUserSortDir }}</b> </span></p>
+
+          <p><span> page: <b> {{ currentUser }}</b>, pages: <b> {{ pagesLangth }}</b> </span></p>
+        </div>
+
       </div>
     </section>
     <section>
       <div class="container">
         <div class="button-list">
-          <div class="btn btnPrimary" @click="prevPage"> &#8592; </div>
-          <div class="btn btnPrimary" @click="nextPage"> &#8594; </div>
+          <div class="btn btnPrimary" @click="prevPage"> &#8592;</div>
+          <div class="btn btnPrimary" @click="nextPage"> &#8594;</div>
         </div>
       </div>
     </section>
@@ -42,71 +55,68 @@
   import axios from 'axios'
 
   export default {
-    data() {
-      return {
-        users: [],
-        currentSort: 'email',
-        currentSortDir: 'asc',
-        page: {
-          current: 1,
-          length: 4
-        }
-      }
-    },
     created() {
-      axios
-        .get('https://randomuser.me/api/?results=14')
-        .then(response => {
-          //console.log(response.data.results)
-          this.users = response.data.results
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$store.getters.loadUsers
     },
     computed: {
+
       usersSort() {
-        return this.users.sort((a, b) => {
-          let mod = 1
-          if (this.currentSortDir === 'desc') mod = -1
-          if (a[this.currentSort] < b[this.currentSort]) return -1 * mod
-          if (a[this.currentSort] > b[this.currentSort]) return 1 * mod
-          return 0
-        }).filter((row, index) => {
-          let start = (this.page.current-1)*this.page.length
-          let end = this.page.current * this.page.length
-          if (index >= start && index < end) return true
-        })
+        return this.$store.getters.usersSort
+      },
+      currentUser(){
+        return this.$store.getters.currentUser
+      },
+      currentUserSort(){
+        return this.$store.getters.currentUserSort
+      },
+      currentUserSortDir(){
+        return this.$store.getters.currentUserSortDir
+      },
+      pagesLangth(){
+        return this.$store.getters.pagesLangth
       }
     },
     methods: {
+      addArrowClass(payload){
+        this.$store.commit('visibleClassMutations', payload)
+      },
       sort(e) {
-        //console.log('e - ', e)
-        if (e === this.currentSort) {
-          this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc'
-        }
-        this.currentSort = e
+        this.$store.commit('sortMutations', e)
       },
       // Pagination
-      prevPage () {
-        if (this.page.current > 1) this.page.current -=1
+      prevPage() {
+        return this.$store.commit('prevPageMutations')
       },
-      nextPage () {
-        if ((this.page.current * this.page.length) < this.users.length) this.page.current +=1
+      nextPage() {
+        return this.$store.commit('nextPageMutations')
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .button-list{
+
+    .arrow {
+      .arrow_up::before {
+        content: '\2191';
+      }
+
+      .arrow_down::before {
+        content: '\2193';
+      }
+    }
+
+
+  .button-list {
     width: 100%;
     text-align: center;
-    .btn{
+
+    .btn {
       border-radius: 60px;
       margin: 0 20px;
     }
   }
+
   img {
     display: block;
     width: 60px;
