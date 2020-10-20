@@ -6,15 +6,15 @@
             <thead>
             <tr>
               <th>thumbnail</th>
-              <th @click="sort('email')"
+              <th @click="sortAction('email')"
                 :class="currentUserSort === 'email' ? 'arrow' : ''">
                 <span :class="currentUserSortDir === 'asc' ? 'arrow_down' : 'arrow_up'"></span>
                 Email </th>
-              <th @click="sort('phone')"
+              <th @click="sortAction('phone')"
                 :class="currentUserSort === 'phone' ? 'arrow' : ''">
                 <span :class="currentUserSortDir === 'asc' ? 'arrow_down' : 'arrow_up'"></span>
                 Phone </th>
-              <th @click="sort('gender')"
+              <th @click="sortAction('gender')"
                 :class="currentUserSort === 'gender' ? 'arrow' : ''">
                 <span :class="currentUserSortDir === 'asc' ? 'arrow_down' : 'arrow_up'"></span>
                 Gender </th>
@@ -42,8 +42,8 @@
     <section>
       <div class="container">
         <div class="button-list">
-          <div class="btn btnPrimary" @click="prevPage"> &#8592;</div>
-          <div class="btn btnPrimary" @click="nextPage"> &#8594;</div>
+          <div class="btn btnPrimary" @click="prevPageMutations"> &#8592;</div>
+          <div class="btn btnPrimary" @click="nextPageMutations"> &#8594;</div>
         </div>
       </div>
     </section>
@@ -52,44 +52,25 @@
 
 
 <script>
-  import axios from 'axios'
+
+  import { mapGetters, mapActions, mapMutations } from 'vuex'
 
   export default {
     created() {
       this.$store.getters.loadUsers
     },
     computed: {
-
-      usersSort() {
-        return this.$store.getters.usersSort
-      },
-      currentUser(){
-        return this.$store.getters.currentUser
-      },
-      currentUserSort(){
-        return this.$store.getters.currentUserSort
-      },
-      currentUserSortDir(){
-        return this.$store.getters.currentUserSortDir
-      },
-      pagesLangth(){
-        return this.$store.getters.pagesLangth
-      }
+      ...mapGetters([
+        'usersSort',
+        'currentUser',
+        'currentUserSort',
+        'currentUserSortDir',
+        'pagesLangth',
+      ]),
     },
     methods: {
-      addArrowClass(payload){
-        this.$store.commit('visibleClassMutations', payload)
-      },
-      sort(e) {
-        this.$store.commit('sortMutations', e)
-      },
-      // Pagination
-      prevPage() {
-        return this.$store.commit('prevPageMutations')
-      },
-      nextPage() {
-        return this.$store.commit('nextPageMutations')
-      }
+      ...mapActions(['sortAction']),
+      ...mapMutations(['prevPageMutations', 'nextPageMutations'])
     }
   }
 </script>
@@ -125,6 +106,7 @@
   }
 
   td {
+    background: #f0effa;
     vertical-align: middle;
   }
 </style>
