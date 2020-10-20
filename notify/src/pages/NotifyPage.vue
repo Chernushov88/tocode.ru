@@ -5,19 +5,18 @@
         <div class="notify__wrapper">
           <div class="notify-title">
             <p>Notify App</p>
-            <svg @click="update"
-                version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" cursor="pointer" x="0px" y="0px" viewBox="0 0 489.935 489.935" style="enable-background:new 0 0 489.935 489.935;" xml:space="preserve"> <g> <path d="M278.235,33.267c-116.7,0-211.6,95-211.6,211.7v0.7l-41.9-63.1c-4.1-6.2-12.5-7.9-18.7-3.8c-6.2,4.1-7.9,12.5-3.8,18.7 l60.8,91.5c2.2,3.3,5.7,5.4,9.6,5.9c0.6,0.1,1.1,0.1,1.7,0.1c3.3,0,6.5-1.2,9-3.5l84.5-76.1c5.5-5,6-13.5,1-19.1 c-5-5.5-13.5-6-19.1-1l-56.1,50.7v-1c0-101.9,82.8-184.7,184.6-184.7s184.7,82.8,184.7,184.7s-82.8,184.7-184.6,184.7 c-49.3,0-95.7-19.2-130.5-54.1c-5.3-5.3-13.8-5.3-19.1,0c-5.3,5.3-5.3,13.8,0,19.1c40,40,93.1,62,149.6,62 c116.6,0,211.6-94.9,211.6-211.7S394.935,33.267,278.235,33.267z"></path> </g></svg>
+            <reload />
           </div>
           <div class="notify-content">
             <preloader
-                v-if="this.$store.getters.getLoading"
+                v-if="getLoading"
                 :width="90"
                 :height ="90"
             />
-            <div class="error" v-if="this.$store.getters.getError.isError">
-              <p>{{this.$store.getters.getError.message}}</p>
+            <div class="error" v-if="getError.isError">
+              <p class="isError">{{getError.message}}</p>
             </div>
-            <notify v-if="!this.$store.getters.getLoading" :messages="messages"
+            <notify v-if="!getLoading" :messages="getMessageMain"
             />
           </div>
         </div>        
@@ -29,23 +28,24 @@
 <script>
 
   import notify from '@/components/Notify.vue'
+  import reload from '@/components/SVG/Reload.vue'
+
+  import { mapGetters, mapActions } from 'vuex'
   // UI
   import preloader from '@/components/UI/Preloader.vue'
 
   export default {
-    components: {notify, preloader},
+    components: {notify, preloader, reload},
     mounted(){
       this.$store.dispatch('getNotifyLazyActions')
+      //...mapActions(['getNotifyLazyActions'])
     },
     computed:{
-      messages(){
-        return this.$store.getters.getMessageMain
-      }
+      ...mapActions(['getNotifyLazyActions']),
+      ...mapGetters(['getMessageMain','getLoading', 'getError'])
     },
     methods: {
-      update(){
-        this.$store.dispatch('getNotifyActions')
-      },
+
 
     }
   }
@@ -53,12 +53,20 @@
 
 
 <style lang="scss" scoped>
+  section, .section {
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 100vh;
+  }
   .container {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 90vh;
+    height: 80vh;
   }
+
 
   .notify__wrapper {
     width: 90%;
@@ -68,6 +76,10 @@
     padding: 30px;
     border-radius: 16px;
     box-shadow: 0 12px 22px 0 rgba(0,0,0,.1);
+    max-height: 80vh;
+    //overflow-y: scroll;
+    //overflow-y: scroll;
+    margin: auto;
   }
 
   .notify__content {

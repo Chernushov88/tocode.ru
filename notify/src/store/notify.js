@@ -1,29 +1,25 @@
 import loadMore from '../assets/js/loadMore.js'
 import axios from 'axios'
 
-const apiUrl = 'https://tocode.ru/static/c/vue-pro/notifyApi.php'
+//const apiUrl = 'https://tocode.ru/static/c/vue-pro/notifyApi.php'
+const apiUrl = 'http://vuejs.skarlat.tmweb.ru/notifyApi.php'
 export default{
   state:{
     messages: [],
     messagesMain: [],
   },
   mutations: {
-    setMessageMutations(state, payload){
-      state.messages = payload
-    },
-    setMessageMainMutations(state, payload){
-      state.messagesMain = payload
-    },
-    loadMessageMutations(state, payload){
-      state.messagesMain = [...state.messagesMain, ...payload]
-    },
+    setMessageMutations: (state, mes) => state.messages = mes,
+    setMessageMainMutations :(state, mes) => state.messagesMain = mes,
+    loadMessageMutations: (state, payload) => state.messagesMain = [...state.messagesMain, ...payload],
+    getMessageFilterMutation: (state) => state.getMessageFilter.length
   },
   actions: {
-    setMessageActions({commit}, payload){
-      commit('setMessageMutations', payload)
+    setMessageActions({commit}, mes){
+      commit('setMessageMutations', mes)
     },
-    setMessageMainActions({commit}, payload){
-      commit('setMessageMainMutations', payload)
+    setMessageMainActions({commit}, mes){
+      commit('setMessageMainMutations', mes)
     },
     loadMessageActions({commit, getters}){
       let res = getters.getMessageFilter
@@ -68,17 +64,13 @@ export default{
     }
   },
   getters: {
-    getMessage (state){
-      return state.messages
-    },
-    getMessageFilter (state){
-      return state.messages.filter(mes => {
-        return mes.main === false
-      })
-    },
-    getMessageMain (state){
-      return state.messagesMain
-    },
-
+    getMessage: state => state.messages,
+    getMessageMain: state => state.messagesMain,
+    getMessageFilter: (state) => state.messages.filter(mes => mes.main === false)
+    // getMessageFilter (state){
+    //   return state.messages.filter(mes => {
+    //     return mes.main === false
+    //   })
+    // }
   }
 }

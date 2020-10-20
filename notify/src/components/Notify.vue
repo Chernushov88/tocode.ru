@@ -15,6 +15,8 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions, mapMutations } from 'vuex'
+
 export default {
   props: {
     messages: {
@@ -29,9 +31,10 @@ export default {
   },
   methods:{
     loadMore(){
-      this.$store.dispatch('loadMessageActions')
-        .catch( err => {console.log(err)} )
+    this.$store.dispatch('loadMessageActions')
+      .catch( err => {console.log(err)} )
     }
+   // ...mapActions(['loadMessageActions'])
   }
 }
 </script>

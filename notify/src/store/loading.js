@@ -16,9 +16,10 @@ export default {
     }
   },
   getters: {
-    getLoading(state){
-      return state.loading
-    }
+    // getLoading(state){
+    //   return state.loading
+    // }
+    getLoading: state => state.loading
   }
 }
 
