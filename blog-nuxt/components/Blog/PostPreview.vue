@@ -31,6 +31,7 @@
 <style lang="scss">
   .post-preview {
     width: 33%;
+    min-width: 300px;
     padding: 16px;
     margin-bottom: 20px;
     text-align: center;

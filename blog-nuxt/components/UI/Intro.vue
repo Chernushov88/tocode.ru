@@ -24,7 +24,7 @@
     margin: 20px 0;
     text-align: center;
     color: #fff;
-    background-color: #0f13ff;
+    background-color: #4bc200;
     h2{
       font-size: 26px;
     }

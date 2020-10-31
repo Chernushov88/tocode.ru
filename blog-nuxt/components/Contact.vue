@@ -43,7 +43,7 @@
 <style lang="scss">
   .contact{
     text-align: center;
-    background-color: #3f61ff;
+    background-color: #4bc200;
     color: #fff;
     .title{
       color: #fff;

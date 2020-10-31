@@ -20,6 +20,8 @@
   }
 </script>
 
-<style scoped>
-
+<style >
+  textarea{
+    min-height: 300px;
+  }
 </style>

@@ -4,6 +4,7 @@
     :class="btnClass"
     v-on="$listeners"
     v-bind="$attrs"
+    :type="type"
   >
     <slot />
   </button>
@@ -15,6 +16,10 @@
       btnClass:{
         type: String,
         default: 'btnPrimary'
+      },
+      type:{
+        type: String,
+        default: 'text'
       }
     }
   }

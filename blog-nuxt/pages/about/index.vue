@@ -6,9 +6,9 @@
         <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis commodi, eaque eveniet ex facere
           impedit in incidunt minus nam neque nesciunt non nulla numquam porro quasi quibusdam sunt tempore vel.
         </div>
-        <no-ssr>
+        <client-only>
           <Intro title="Lorem ipsum dolor sit amet" />
-        </no-ssr>
+        </client-only>
 
         <div>Ad, doloribus nostrum numquam porro rem sunt voluptatem? Asperiores beatae deleniti, distinctio dolorem
           doloremque error impedit in necessitatibus nihil numquam? Dolore ex exercitationem ipsam praesentium! Amet hic
@@ -34,6 +34,21 @@
 
 <script>
   export default {
+    head() {
+      const title = 'About My SSR Blog!';
+      const description = 'My SSR blog! With Nuxt.js';
+      const type = 'site';
+
+      return {
+        title,
+        meta: [
+          { hid: 'og:title', name: 'og:title', content: title },
+          { hid: 'description', name: 'description', content: description },
+          { hid: 'og:description', name: 'og:description', content: description },
+          { hid: 'og:type', name: 'og:type', content: type },
+        ],
+      };
+    },
   }
 </script>
 

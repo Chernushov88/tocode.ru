@@ -1,41 +1,53 @@
 <template>
   <div class="wrapper-content wrapper-content--fixed">
     <post :post="post"/>
-    <comments :comments="comments"/>
-    <newComment/>
+    <comments :comments="comments" />
+    <newComment :postId="$route.params.id" />
   </div>
 </template>
 
 <script>
+  import axios from 'axios'
   import post from '@/components/Blog/Post.vue'
   import newComment from '@/components/Comments/NewComment.vue'
   import comments from '@/components/Comments/Comments.vue'
 
+
   export default {
     components: {post, comments, newComment},
-    data() {
+    async asyncData (context) {
+      let [post, comments] = await Promise.all([
+        axios.get(`https://blog-nuxt-713ec.firebaseio.com/posts/${context.params.id}.json`),
+        axios.get(`https://blog-nuxt-713ec.firebaseio.com/comments.json`)
+      ])
+      let commentsArrayRes = Object.values(comments.data).filter( comment => (comment.postId === context.params.id) && comment.publish )
       return {
-        post: {
-          id: 1,
-          title: 'post 1',
-          descr: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis commodi, eaque eveniet ex facere',
-          img: '/img/1.jpg',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis iure libero odit quae totam. Architecto deleniti ducimus enim eos et, excepturi illo impedit libero nobis officiis porro, saepe sit voluptates!',
-        },
-        comments: [
-          {
-            name: 'Alex',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis commodi, eaque eveniet ex facere'
-          },
-          {
-            name: 'Sergey',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis commodi, eaque eveniet ex facere'
-          }
-        ]
+        post: post.data,
+        comments: commentsArrayRes
       }
-    }
+    },
+    head() {
+      const title = this.post.title;
+      const description = this.post.descr;
+      const img = this.post.img;
+      const type = 'article';
+
+      return {
+        title,
+        meta: [
+          { hid: 'og:title', name: 'og:title', content: title },
+          { hid: 'description', name: 'description', content: description },
+          { hid: 'og:description', name: 'og:description', content: description },
+          { hid: 'og:type', name: 'og:type', content: type },
+          { hid: 'og:img', name: 'og:img', content: img },
+        ],
+      };
+    },
   }
+
+
 </script>
+
 
 
 <style lang="scss">

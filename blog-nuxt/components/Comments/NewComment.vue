@@ -1,13 +1,19 @@
 <template>
-  <section class="comment">
+  <section class="new-comment">
     <div class="container">
-      <Message v-if="message" :message="message"/>
-      <form @submit.prevent="onSubmit" class="comment-form">
-        <AppInput v-model="comment.name">Name:</AppInput>
-        <AppTextArea  v-model="comment.text">Text:</AppTextArea>
-        <!--        button-->
+      <h2 class="title"> New Comment: </h2>
+
+      <!-- message -->
+      <Message v-if="message" :message="message" />
+
+      <form @submit.prevent="onSubmit" class="contact-form">
+        <!-- name -->
+        <AppInput v-model="comment.name"> Name: </AppInput>
+        <!-- text -->
+        <AppTextArea v-model="comment.text"> Text: </AppTextArea>
+        <!-- buttons -->
         <div class="controls">
-          <AppButton> Submit!</AppButton>
+          <AppButton> Submit! </AppButton>
         </div>
       </form>
     </div>
@@ -15,45 +21,72 @@
 </template>
 
 <script>
-
+  import axios from 'axios'
   export default {
-    data(){
-      return{
+    props: {
+      postId: {
+        type: String,
+        required: true
+      }
+    },
+    data () {
+      return {
         message: null,
-        comment:{
+        comment: {
           name: '',
-          text: '',
+          text: ''
         }
       }
     },
+    mounted(){
+
+    },
+    computed(){
+
+    },
     methods: {
-      onSubmit(){
-        console.log(this.comment)
+      onSubmit (e) {
+        console.log('e', e)
+        axios.post('https://blog-nuxt-713ec.firebaseio.com/comments.json', {
+          postId: this.postId,
+          publish: false,
+          ...this.comment
+        })
+          .then(()=>{
+            this.message = "Submited!"
+            // Reset
+            this.comment.name = ''
+            this.comment.text = ''
+          })
+          .catch(e=>{console.log(e)})
 
-        this.message = 'Submited!'
-
-        this.comment.name = ''
-        this.comment.text = ''
+        // this.$store.dispatch('addComment', {
+        //   postId: this.postId,
+        //   publish: false,
+        //   ...this.comment
+        // })
+        //   .then(()=>{
+        //     this.message = "Submited!"
+        //     // Reset
+        //     this.comment.name = ''
+        //     this.comment.text = ''
+        //   })
+        //   .catch(e=>{console.log(e)})
       }
     }
   }
 </script>
 
 <style lang="scss">
-  .comment{
+  .new-comment {
     text-align: center;
-    /*background-color: #3f61ff;*/
-    /*color: #fff;*/
-    .title{
-      /*color: #fff;*/
-    }
-    .comment-form{
+    .contact-form {
       max-width: 600px;
       margin: 30px auto;
     }
-    .controls{
+    .controls {
       margin: 30px 0;
     }
   }
-
 </style>
+

@@ -1,14 +1,14 @@
 <template>
   <section class="new-post">
     <div class="container">
-      <form @submit.prevent>
+      <form @submit.prevent="onSubmit">
         <AppInput v-model="post.title">Title:</AppInput>
         <AppInput v-model="post.descr">Description:</AppInput>
         <AppInput v-model="post.img">Img:</AppInput>
         <AppTextArea v-model="post.content">Content:</AppTextArea>
         <div class="controls">
-          <AppButton class="btnDanger" @click="censel">Cencel</AppButton>
-          <AppButton @click="onSubmit">Submit!</AppButton>
+          <AppButton class="btnDanger" type="button" @click="censel">Cencel</AppButton>
+          <AppButton>Save!</AppButton>
         </div>
       </form>
     </div>

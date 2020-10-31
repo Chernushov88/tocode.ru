@@ -1,4 +1,4 @@
-
+import axios from 'axios'
 export default {
   /*
   ** Nuxt rendering mode
@@ -53,11 +53,35 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    // ['@nuxtjs/google-analytics', {id: 'KEY'}],
+    // ['@nuxtjs/yandex-metrika', {
+    //   id: 'KEY',
+    //   wevbisor: false,
+    //   clickmap: true,
+    //   trackLinks: true
+    // }],
   ],
   /*
   ** Build configuration
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+    vendor: ['vue', 'axios',]
   }
+  ,
+  generate: {
+    routes: function() {
+      return axios.get('https://blog-nuxt-713ec.firebaseio.com/F.json')
+        .then(res => {
+          const postsArray = [];
+          for (let key in res.data) {
+            postsArray.push({ ...res.data[key], id: key});
+          };
+
+          return postsArray.map((post) => {
+            return '/blog/' + post.id;
+          });
+        });
+    },
+  },
 }
