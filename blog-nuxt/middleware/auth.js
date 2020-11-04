@@ -1,5 +1,5 @@
-export default function(contex){
-  if (!contex.store.getters.checkAuthUser) {
-    contex.redirect('/admin/auth')
+export default function(context){
+  if (!context.store.getters.checkAuthUser) {
+    context.redirect('/admin/auth')
   }
 }

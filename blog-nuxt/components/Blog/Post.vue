@@ -7,9 +7,9 @@
         <h1 class="title">{{post.title}}</h1>
         <p>{{post.descr}}</p>
       </div>
-      <!--          body-->
+
       <div class="post-body">
-        <p>{{post.content}}</p>
+        <div v-html="post.content"></div>
       </div>
     </div>
   </section>
@@ -25,7 +25,3 @@
     },
   }
 </script>
-
-<style lang="scss">
-
-</style>

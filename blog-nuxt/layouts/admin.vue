@@ -9,7 +9,7 @@
           <nuxt-link to="/admin/comments" class="link linkWhite">Comments</nuxt-link>
           <span @click="logoutUser" class="link linkWhite">Logout</span>
         </Intro>
-        <nuxt/>
+        <Nuxt />
       </div>
     </div>
   </client-only>
@@ -20,7 +20,7 @@
 
   export default {
     components: {Header},
-    middleware: ['auth'],
+    middleware: ['auth-check', 'auth'],
     methods: {
       logoutUser() {
         this.$store.dispatch('logoutUser')

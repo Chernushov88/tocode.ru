@@ -2,6 +2,7 @@
   <div class="control">
     <label><slot></slot></label>
     <textarea
+      v-bind="$attrs"
       :value="value"
       @input="$emit('input', $event.target.value)"
     >
@@ -20,8 +21,8 @@
   }
 </script>
 
-<style >
+<style lang="scss" scoped>
   textarea{
-    min-height: 300px;
+    min-height: 400px;
   }
 </style>

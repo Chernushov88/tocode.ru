@@ -23,7 +23,8 @@
         links: [
           { title: 'Blog', url: '/blog' },
           { title: 'About', url: '/about' },
-          { title: 'Admin', url: '/admin/auth' },
+          { title: 'Admin', url: '/admin' },
+          //{ title: 'Admin', url: '/admin/auth' },
         ]
       }
     }

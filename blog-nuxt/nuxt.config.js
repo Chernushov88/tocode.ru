@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 export default {
   /*
   ** Nuxt rendering mode
@@ -32,12 +33,21 @@ export default {
   css: [
     {src: '~/assets/scss/main.scss', lang: 'scss'}
   ],
+  layoutTransition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+  pageTransition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
   /*
   ** Plugins to load before mounting the App
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    '~plugins/app-components.js'
+    '~plugins/app-components.js',
+    '~/plugins/highlight.js'
   ],
   /*
   ** Auto import components
@@ -67,20 +77,19 @@ export default {
   */
   build: {
     vendor: ['vue', 'axios',]
-  }
-  ,
+  },
   generate: {
     routes: function() {
-      return axios.get('https://blog-nuxt-713ec.firebaseio.com/F.json')
+      return axios.get('https://blog-nuxt-713ec.firebaseio.com/posts.json')
         .then(res => {
           const postsArray = [];
           for (let key in res.data) {
             postsArray.push({ ...res.data[key], id: key});
-          };
+          }
 
           return postsArray.map((post) => {
             return '/blog/' + post.id;
-          });
+          })
         });
     },
   },

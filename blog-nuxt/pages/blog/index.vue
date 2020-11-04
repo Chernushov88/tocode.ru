@@ -1,9 +1,7 @@
 <template>
   <div class="wrapper-content wrapper-content--fixed">
     <Intro title="My posts:" />
-    <PostsList
-      :posts="postsLoaded"
-    />
+    <PostsList :posts="postsLoaded"/>
   </div>
 </template>
 
@@ -16,9 +14,9 @@
       }
     },
     head() {
-      const title = 'My Blog Page!';
-      const description = 'My SSR blog! With Nuxt.js';
-      const type = 'site';
+      const title = 'My Blog Page!'
+      const description = 'My SSR blog! With Nuxt.js'
+      const type = 'site'
 
       return {
         title,

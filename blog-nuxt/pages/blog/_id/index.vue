@@ -3,11 +3,13 @@
     <post :post="post"/>
     <comments :comments="comments" />
     <newComment :postId="$route.params.id" />
+
   </div>
 </template>
 
 <script>
   import axios from 'axios'
+
   import post from '@/components/Blog/Post.vue'
   import newComment from '@/components/Comments/NewComment.vue'
   import comments from '@/components/Comments/Comments.vue'
@@ -15,22 +17,11 @@
 
   export default {
     components: {post, comments, newComment},
-    async asyncData (context) {
-      let [post, comments] = await Promise.all([
-        axios.get(`https://blog-nuxt-713ec.firebaseio.com/posts/${context.params.id}.json`),
-        axios.get(`https://blog-nuxt-713ec.firebaseio.com/comments.json`)
-      ])
-      let commentsArrayRes = Object.values(comments.data).filter( comment => (comment.postId === context.params.id) && comment.publish )
-      return {
-        post: post.data,
-        comments: commentsArrayRes
-      }
-    },
     head() {
-      const title = this.post.title;
-      const description = this.post.descr;
-      const img = this.post.img;
-      const type = 'article';
+      const title = this.post.title
+      const description = this.post.descr
+      const img = this.post.img
+      const type = 'article'
 
       return {
         title,
@@ -43,6 +34,21 @@
         ],
       };
     },
+    validate({params, store}) {
+      return store.state.postsLoaded.some(post => post.id === params.id);
+    },
+    async asyncData (context) {
+      let [post, comments] = await Promise.all([
+        axios.get(`https://blog-nuxt-713ec.firebaseio.com/posts/${context.params.id}.json`),
+        axios.get(`https://blog-nuxt-713ec.firebaseio.com/comments.json`)
+      ])
+      let commentsArrayRes = comments.data ? Object.values(comments.data)
+        .filter( comment => (comment.postId === context.params.id) && comment.publish ) : null
+      return {
+        post: post.data,
+        comments: commentsArrayRes
+      }
+    }
   }
 
 
